@@ -43,13 +43,18 @@ docker build -t alvarosalazar/spring-jni:latest .
 
 ### 5. Ejecutar la Aplicación usando Docker Compose
 
-1. Ejecuta el siguiente comando en la terminal para iniciar la aplicación:
+Si solo desea probar el servicio en realidad no se requieren los pasos anteriores de generacion del jar y de la construcción con `docker build`, ya que la imagen de la aplicacion ya se encuentra publicada en Docker Hub.
+Ahoa si desea modificar el código fuente y volver a construir la imagen, entonces si debe seguir los pasos anteriores.
+
+Para la ejecución de la aplicación se utiliza Docker Compose, que orquesta la ejecución de la aplicación Spring Boot y la biblioteca compartida de Linux:
+
+Ejecuta el siguiente comando en la terminal para iniciar la aplicación:
 
 ```bash
 docker compose up
 ```
 
-### 6. Probar los Endpoints
+### 6. Probar los Endpoints por Medio de Curl o PowerShell
 
 #### Usando Curl
 
@@ -61,6 +66,22 @@ curl http://localhost:8080/api/jni-service/suma/7/7
 ```
 
 El resultado esperado es `14`.
+
+#### Probar los Endpoints usando PowerShell en Windows
+
+Para probar el endpoint utilizando PowerShell en Windows, se puede usar el cmdlet `Invoke-WebRequest`:
+
+```powershell
+(Invoke-WebRequest -Uri "http://localhost:8080/api/jni-service/suma/7/7" -Method GET).Content
+```
+
+#### Explicación:
+
+- `Invoke-WebRequest -Uri "http://localhost:8080/api/jni-service/suma/7/7" -Method GET`: Este comando realiza una solicitud HTTP GET a la URL especificada, que es el endpoint de la aplicación.
+- `( ... )`: Los paréntesis se utilizan para ejecutar el comando y obtener su resultado.
+- `.Content`: Esta propiedad accede al contenido de la respuesta HTTP y lo muestra en la consola.
+
+Asi que este comando enviará una solicitud GET al endpoint `/api/jni-service/suma/7/7` y mostrará el resultado de la operación, que debería ser `14` si la solicitud es exitosa.
 
 ### 7. Pruebas con Endpoints en IntelliJ IDEA
 
@@ -81,6 +102,4 @@ Para integrar la biblioteca compartida de Linux con la aplicación Spring Boot, 
 
 En el constructor de la clase `JavaCalculator`, se carga la biblioteca nativa utilizando `System.loadLibrary("javacalculator")`. Esto asegura que la biblioteca se cargue al inicializar la clase. Si la carga de la biblioteca falla, se captura y se imprime el error correspondiente.
 
-Asegúrate de que la clase `JavaCalculator` se encuentre en el mismo paquete con el que se creó la biblioteca compartida de Linux. En este caso, la biblioteca se encuentra en el paquete `ejemplojni.lib`, por lo que la clase `JavaCalculator` también se encuentra en ese mismo paquete.
-
-Si encuentras algún problema o deseas contribuir al proyecto, no dudes en abrir un issue o enviar un pull request.
+Asegúrese de que la clase `JavaCalculator` se encuentre en el mismo paquete con el que se creó la biblioteca compartida de Linux. En este caso, la biblioteca se encuentra en el paquete `ejemplojni.lib`, por lo que la clase `JavaCalculator` también se encuentra en ese mismo paquete.
